@@ -1,0 +1,2 @@
+/* In the spotlight window the preview fills the space under the form. */
+body.window #preview:not([hidden]) { flex: 1; max-height: none; }

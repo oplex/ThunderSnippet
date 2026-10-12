@@ -83,9 +83,14 @@ export async function renderList() {
 async function updatePreview() {
   const snippets = await getSnippets();
   const body = $("eBody").value;
-  const r = render(body, { context: SAMPLE, values: {}, snippets });
-  $("ePreview").textContent = $("eHtml").checked ? r.text.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "") : r.text;
-  const fields = fieldsOf({ body, files }, snippets).map((f) => f.name);
+  // Fields show their default, or [NAME] where something will be typed.
+  const all = fieldsOf({ body, files }, snippets);
+  const values = Object.fromEntries(all.map((f) => [f.name, f.default || `[${f.name}]`]));
+  const names = files.map((f) => render(f.name, { context: SAMPLE, values }).text);
+  const r = render(body, { context: { ...SAMPLE, attachments: names }, values, snippets });
+  const text = $("eHtml").checked ? r.text.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "") : r.text;
+  $("ePreview").textContent = text + (names.length ? `\n\n${names.map((n) => `📎 ${n}`).join("\n")}` : "");
+  const fields = all.map((f) => f.name);
   $("eFields").textContent = fields.length ? `asks for: ${fields.join(", ")}` : "inserted right away (no fields)";
 }
 
