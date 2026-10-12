@@ -1,7 +1,7 @@
 name: Website
 
 # Publishes site/ (plus the screenshots and icons from listing/) to GitHub
-# Pages: https://oplex.github.io/thundersnippet/
+# Pages: https://oplex.github.io/ThunderSnippet/
 # One-time setup: repository Settings → Pages → Source: "GitHub Actions".
 on:
   push:

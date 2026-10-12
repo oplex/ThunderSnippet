@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://oplex.github.io/thundersnippet/sitemap.xml
+Sitemap: https://oplex.github.io/ThunderSnippet/sitemap.xml

@@ -2,6 +2,8 @@
 
 # ThunderSnippet
 
+**Website:** <https://oplex.github.io/ThunderSnippet/> · [Quicktext alternative: comparison](https://oplex.github.io/ThunderSnippet/quicktext-alternative.html)
+
 Canned replies for Thunderbird. In a message, type a short key like `po1` and
 press **Tab**:
 
