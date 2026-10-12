@@ -8,6 +8,8 @@
  *   {{me.first}} {{me.name}} {{me.email}}                the sender
  *   {{subject}} {{date}} {{time}} {{date:YYYY-MM-DD}}    (see dates.js)
  *   {{to.first|there}}        built-ins take a fallback for empty values
+ *   {{attachments}}           names of the message's attachments ("a.pdf, b.png")
+ *   {{attachments.count}}     how many there are
  *   {{snip:sig}}              another snippet, by its key
  *   {{cursor}}                where the caret goes afterwards
  */
@@ -24,7 +26,7 @@ export function parseToken(raw) {
   const lower = head.toLowerCase();
   if (lower === "cursor") return { kind: "cursor", name: "cursor", options };
   if (lower.startsWith("snip:")) return { kind: "snip", name: head.slice(5).trim().toLowerCase(), options };
-  if (PEOPLE.test(head) || ["subject", "date", "time"].includes(lower) || /^(date|time):/i.test(head)) {
+  if (PEOPLE.test(head) || ["subject", "date", "time", "attachments", "attachments.count"].includes(lower) || /^(date|time):/i.test(head)) {
     return { kind: "builtin", name: head, options };
   }
   return { kind: "field", name: head, options };
@@ -33,8 +35,14 @@ export function parseToken(raw) {
 const byKey = (snippets, key) => snippets.find((s) => s.key.toLowerCase() === key);
 
 // The fields a snippet asks for (nested snippets included), in order:
-// [{ name, default, choices }].
+// [{ name, default, choices }]. Pass a snippet object to include the fields
+// in its file names too.
 export function fieldsOf(body, snippets = [], depth = 0, seen = new Map()) {
+  if (body && typeof body === "object") {
+    fieldsOf(body.body, snippets, depth, seen);
+    for (const f of body.files ?? []) fieldsOf(f.name, snippets, depth, seen);
+    return [...seen.values()];
+  }
   for (const m of String(body).matchAll(TOKEN)) {
     const t = parseToken(m[1]);
     if (t.kind === "field" && !seen.has(t.name)) {
@@ -52,6 +60,8 @@ function builtin(name, context, now) {
   if (people) return context?.[people[1].toLowerCase()]?.[people[2].toLowerCase()] ?? "";
   const [kind, format] = name.split(/:(.*)/s);
   if (kind.toLowerCase() === "subject") return context?.subject ?? "";
+  if (kind.toLowerCase() === "attachments") return (context?.attachments ?? []).join(", ");
+  if (kind.toLowerCase() === "attachments.count") return String((context?.attachments ?? []).length);
   if (format) return formatDate(now, format);
   return kind.toLowerCase() === "date" ? localDate(now) : localTime(now);
 }

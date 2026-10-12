@@ -9,7 +9,8 @@ export function buildExport(snippets, settings, now = new Date()) {
   return { app: EXPORT_APP, format: 1, exported: now.toISOString(), snippets, settings };
 }
 
-const clean = (s) => ({ key: normalizeKey(s.key), name: String(s.name ?? s.key), body: String(s.body ?? ""), html: !!s.html, group: String(s.group ?? "") });
+const cleanFiles = (files) => (Array.isArray(files) ? files.filter((f) => f?.name && typeof f.data === "string").map(({ name, type, data }) => ({ name: String(name), type: String(type ?? ""), data })) : []);
+const clean = (s) => ({ key: normalizeKey(s.key), name: String(s.name ?? s.key), body: String(s.body ?? ""), html: !!s.html, group: String(s.group ?? ""), files: cleanFiles(s.files) });
 
 // Any supported file → { kind, snippets, settings?, notes }.
 //   ThunderSnippet export (.json), a JSON array of snippets, Quicktext

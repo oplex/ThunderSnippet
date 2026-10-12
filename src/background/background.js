@@ -5,6 +5,8 @@ import { registerComposeScript, findComposeTab, insertSnippet, insertText } from
 import { getSnippet, seedPresets, rememberValues, getSnippets, getSettings, saveSettings, saveSnippets } from "../tb/store.js";
 import { fieldsOf } from "../lib/template.js";
 import { serveSuite } from "../kit/suite.js";
+import { snippetsWithFiles } from "../options/import-ui.js";
+import { addSnippets } from "../tb/store.js";
 
 const WIDTH = 640;
 const HEIGHT = 480;
@@ -32,7 +34,7 @@ export async function openPalette(tabId, { key = "", typed = "" } = {}) {
 export async function expand(tabId, key, typed) {
   const snippet = await getSnippet(key);
   if (!snippet) return insertText(tabId, typed);
-  if (fieldsOf(snippet.body, await getSnippets()).length) return openPalette(tabId, { key, typed });
+  if (fieldsOf(snippet, await getSnippets()).length) return openPalette(tabId, { key, typed });
   return insertSnippet(tabId, snippet);
 }
 
@@ -66,9 +68,12 @@ browser.windows.onRemoved.addListener((windowId) => {
 serveSuite({
   ping: () => "pong",
   listSnippets: async () => (await getSnippets()).map(({ key, name, group }) => ({ key, name, group })),
-  getConfig: async () => ({ snippets: await getSnippets(), settings: await getSettings() }),
+  getConfig: async () => ({ snippets: await snippetsWithFiles(), settings: await getSettings() }),
   setConfig: async ({ snippets, settings }) => {
-    if (Array.isArray(snippets)) await saveSnippets(snippets);
+    if (Array.isArray(snippets)) {
+      await saveSnippets([]);
+      await addSnippets(snippets);
+    }
     if (settings) await saveSettings(settings);
     return true;
   },

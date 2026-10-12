@@ -66,7 +66,7 @@ export function importQuicktext(xml) {
       const name = tag(t[2], "name");
       const keyword = tag(t[2], "keyword");
       const type = /type="(\d)"/.exec(t[1])?.[1];
-      raw.push({ group, name, keyword, body: tag(t[2], "body"), html: type === "1" });
+      raw.push({ group, name, keyword, body: tag(t[2], "body"), html: type === "1", files: tag(t[2], "attachments") });
     }
   }
   const used = new Set();
@@ -79,6 +79,8 @@ export function importQuicktext(xml) {
   for (const r of raw) r.key = unique(slug(r.keyword || r.name));
   const keyOf = (group, name) => raw.find((r) => r.name === name && (!group || r.group === group))?.key;
   const notes = new Set();
+  // Quicktext stores attachments as paths on disk, which add-ons can't read.
+  if (raw.some((r) => r.files)) notes.add("attachments (add the files again in the snippet editor)");
   const snippets = raw.map((r) => ({
     key: r.key,
     name: r.name || r.key,

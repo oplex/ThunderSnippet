@@ -42,3 +42,29 @@ test("remembered values only when the setting is on", async () => {
   await store.rememberValues({ PO: "2" });
   assert.deepEqual(await store.getLastValues(), { PO: "1" });
 });
+
+test("files: attached with field-filled names; {{attachments}} lists them", async () => {
+  const { storeFile } = await import("../src/tb/files.js");
+  const { fieldsOf } = await import("../src/lib/template.js");
+  const file = await storeFile("PO {{PONUMBER}} – terms.pdf", "application/pdf", new Uint8Array([37, 80, 68, 70]));
+  const snippet = { key: "po2", body: "PO {{PONUMBER}}, attached: {{attachments}} ({{attachments.count}})", files: [file] };
+  assert.deepEqual(fieldsOf(snippet).map((f) => f.name), ["PONUMBER"]);
+  const text = await insertSnippet(7, snippet, { PONUMBER: "4711" });
+  assert.deepEqual(fake.attached, [{ tabId: 7, name: "PO 4711 – terms.pdf", size: 4, type: "application/pdf" }]);
+  assert.equal(text, "PO 4711, attached: PO 4711 – terms.pdf (1)");
+});
+
+test("files survive export and import (as data) and are removed with the snippet", async () => {
+  const { storeFile } = await import("../src/tb/files.js");
+  const { snippetsWithFiles } = await import("../src/options/import-ui.js");
+  const { readImport, buildExport } = await import("../src/lib/backup.js");
+  await store.saveSnippets([{ key: "t", body: "x", files: [await storeFile("a.txt", "text/plain", new TextEncoder().encode("hi"))] }]);
+  const json = JSON.stringify(buildExport(await snippetsWithFiles(), {}));
+  await store.deleteSnippet("t");
+  assert.equal(Object.keys(fake.storage).filter((k) => k.startsWith("file:")).length, 0, "file data left behind");
+  await store.addSnippets(readImport(json).snippets);
+  const [back] = await store.getSnippets();
+  assert.equal(back.files[0].name, "a.txt");
+  const { fileBytes } = await import("../src/tb/files.js");
+  assert.equal(new TextDecoder().decode(await fileBytes(back.files[0].id)), "hi");
+});

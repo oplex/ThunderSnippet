@@ -30,6 +30,10 @@
       <label for="eGroup">Group</label><input id="eGroup" type="text" placeholder="optional">
       <label for="eBody">Text</label><textarea id="eBody" rows="9"></textarea>
       <span></span><label class="inline"><input id="eHtml" type="checkbox"> The text is HTML</label>
+      <label>Files</label>
+      <div><ul id="eFiles" class="files"></ul>
+        <label class="file tk-button">Add files…<input id="eAddFiles" type="file" multiple></label>
+        <span class="dim">Attached when the snippet is inserted. Names may use fields: <code>PO {{PONUMBER}}.pdf</code></span></div>
     </div>
     <p class="dim help">Fields: <code>{{PONUMBER}}</code>, with a default <code>{{PONUMBER|123}}</code>, choices <code>{{GREETING|Hi|Hello}}</code>.
       Filled in for you: <code>{{to.first}}</code> <code>{{to.name}}</code> <code>{{to.email}}</code> <code>{{me.name}}</code>

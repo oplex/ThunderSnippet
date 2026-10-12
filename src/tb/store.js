@@ -2,6 +2,7 @@
 // values typed into each field.
 
 import { normalizeKey, PRESETS } from "../lib/snippets.js";
+import { storeFile, removeFiles, fromBase64 } from "./files.js";
 
 export const DEFAULT_SETTINGS = {
   expandKey: "Tab", // "Tab", "Space" or "off": expands an abbreviation typed in a message
@@ -24,13 +25,23 @@ export async function getSnippet(key) {
 // Add or replace (by `oldKey`, or by its own key).
 export async function putSnippet(snippet, oldKey = snippet.key) {
   const list = (await getSnippets()).filter((s) => s.key !== normalizeKey(oldKey) && s.key !== normalizeKey(snippet.key));
-  list.push({ key: normalizeKey(snippet.key), name: snippet.name || snippet.key, body: snippet.body, html: !!snippet.html, group: snippet.group ?? "" });
+  list.push({ key: normalizeKey(snippet.key), name: snippet.name || snippet.key, body: snippet.body, html: !!snippet.html, group: snippet.group ?? "", files: snippet.files ?? [] });
   list.sort((a, b) => a.key.localeCompare(b.key));
   await saveSnippets(list);
 }
 
 export async function deleteSnippet(key) {
-  await saveSnippets((await getSnippets()).filter((s) => s.key !== normalizeKey(key)));
+  const all = await getSnippets();
+  const gone = all.find((s) => s.key === normalizeKey(key));
+  await saveSnippets(all.filter((s) => s !== gone));
+  await removeFiles((gone?.files ?? []).map((f) => f.id));
+}
+
+// Imported files carry their data (base64); store it and keep the metadata.
+async function storeImportedFiles(files = []) {
+  const out = [];
+  for (const f of files) out.push(f.data ? await storeFile(f.name, f.type, fromBase64(f.data)) : f);
+  return out;
 }
 
 // Adds snippets, renaming keys that are taken ("po1" → "po1-2"). Returns the count.
@@ -41,7 +52,7 @@ export async function addSnippets(incoming) {
     let key = normalizeKey(s.key);
     for (let i = 2; taken.has(key); i++) key = `${normalizeKey(s.key)}-${i}`;
     taken.add(key);
-    list.push({ key, name: s.name || key, body: s.body, html: !!s.html, group: s.group ?? "" });
+    list.push({ key, name: s.name || key, body: s.body, html: !!s.html, group: s.group ?? "", files: await storeImportedFiles(s.files) });
   }
   await saveSnippets(list.sort((a, b) => a.key.localeCompare(b.key)));
   return incoming.length;

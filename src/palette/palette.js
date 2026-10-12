@@ -45,7 +45,8 @@ function draw() {
     li.setAttribute("role", "option");
     const text = el("div", "text");
     text.append(el("div", "title", s.name || s.key), el("div", "sub", previewOf(s)));
-    li.append(el("span", "icon", fieldsOf(s.body, state.snippets).length ? "✎" : "❝"), text, el("span", "badge", s.key));
+    const files = s.files?.length ? el("span", "badge", `📎 ${s.files.length}`) : "";
+    li.append(el("span", "icon", fieldsOf(s, state.snippets).length ? "✎" : "❝"), text, files, el("span", "badge", s.key));
     li.addEventListener("mousedown", (ev) => ev.preventDefault());
     li.addEventListener("click", () => choose(s));
     list.append(li);
@@ -71,7 +72,7 @@ async function insert(snippet, values = {}) {
 
 // Enter on a snippet: insert, or show its form.
 async function choose(snippet) {
-  if (!fieldsOf(snippet.body, state.snippets).length) return insert(snippet);
+  if (!fieldsOf(snippet, state.snippets).length) return insert(snippet);
   state.snippet = snippet;
   $("list").hidden = true;
   $("form").hidden = false;

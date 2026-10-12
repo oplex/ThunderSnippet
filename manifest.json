@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ThunderSnippet",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Canned replies for Thunderbird: type a key like po1 and press Tab, or search your snippets. Fields like {{PONUMBER}}, recipient names, dates, presets and Quicktext import.",
   "author": "oplex.se",
   "homepage_url": "https://github.com/oplex/thundersnippet",

@@ -55,11 +55,20 @@ the text. A live preview shows the result.
 | `{{subject}}` | The message subject |
 | `{{date}}` `{{time}}` | Today, in your format |
 | `{{date:YYYY-MM-DD}}` `{{date:dddd D MMMM}}` | A date format (`YYYY YY MMMM MMM MM M DD D dddd ddd HH H mm ss`) |
+| `{{attachments}}` `{{attachments.count}}` | The names (and number) of the message's attachments |
 | `{{snip:sig}}` | Another snippet, by key (its fields are asked too) |
 | `{{cursor}}` | Where the caret goes afterwards |
 
 Fields remember what you typed last time (a setting), so recurring values are
 one Enter away. Snippets can be plain text or HTML.
+
+### Files
+
+A snippet can carry files (*Files → Add files…* in the editor). Inserting it
+attaches them to the message. File names can use fields too: a file named
+`PO {{PONUMBER}} terms.pdf` is attached as `PO 4711 terms.pdf`, and the form
+asks for the PO number once for the text and the name. The text can mention
+them with `{{attachments}}`. Files travel with exports and the suite backup.
 
 Example snippets are added on first install, `po1` among them:
 
@@ -83,7 +92,8 @@ Settings → *Import and export* reads:
   `[[INPUT=PO]]` → `{{PO}}`, `[[INPUT=Speed|select|A;B]]` → `{{Speed|A|B}}`,
   `[[DATE]]`, `[[TIME]]`, `[[SUBJECT]]`, `[[CURSOR]]`, and `[[TEXT=group|name]]`
   → `{{snip:key}}`. Codes without an equivalent (scripts, files) are kept as
-  text and listed after the import.
+  text and listed after the import. Quicktext keeps attachments as paths on
+  your disk, which add-ons can't read: add those files again in the editor.
 - **CSV** with a header naming the key (`key`, `abbreviation` or `keyword`)
   and text (`text`, `body` or `snippet`) columns, optionally a name.
 - ThunderSnippet's own **export** (JSON).

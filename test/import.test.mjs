@@ -15,6 +15,7 @@ const QT = `<?xml version="1.0"?>
 [[INPUT=Speed|select|Normal;Express]] · [[DATE=long]] [[CURSOR]]
 [[TEXT=Sales|Signature]] [[SCRIPT=foo]]]]></body>
         <keyword><![CDATA[po1]]></keyword>
+        <attachments><![CDATA[/home/me/terms.pdf]]></attachments>
       </text>
       <text shortcut="" type="1">
         <name><![CDATA[Signature]]></name>
@@ -35,7 +36,7 @@ test("Quicktext templates become snippets, codes translated", () => {
     "Hello {{to.first}}! Here is PO {{PO number}}.\n{{Speed|Normal|Express}} · {{date:dddd, D MMMM YYYY}} {{cursor}}\n{{snip:signature}} [[SCRIPT=foo]]",
   );
   assert.equal(snippets[1].body, "<b>{{me.name}}</b> &amp; team");
-  assert.deepEqual(notes, ["[[SCRIPT]]"]);
+  assert.deepEqual(notes, ["attachments (add the files again in the snippet editor)", "[[SCRIPT]]"]);
 });
 
 test("CSV import with quotes and line breaks", () => {
@@ -50,6 +51,6 @@ test("readImport recognises every format; export round-trips", () => {
   const exported = JSON.stringify(buildExport([{ key: "Po1", name: "P", body: "b" }], { expandKey: "Tab" }));
   const back = readImport(exported);
   assert.equal(back.kind, "ThunderSnippet");
-  assert.deepEqual(back.snippets, [{ key: "po1", name: "P", body: "b", html: false, group: "" }]);
+  assert.deepEqual(back.snippets, [{ key: "po1", name: "P", body: "b", html: false, group: "", files: [] }]);
   assert.throws(() => readImport("hello"), /Unknown file/);
 });

@@ -11,7 +11,7 @@ function el(tag, attrs = {}, text) {
 // Shows the form for `snippet` in `box` and keeps `preview` updated.
 // Returns { values(), focus() }.
 export function showForm(box, preview, snippet, { snippets, context, lastValues, onSubmit }) {
-  const fields = fieldsOf(snippet.body, snippets);
+  const fields = fieldsOf(snippet, snippets);
   box.replaceChildren();
   const inputs = new Map();
   for (const f of fields) {
@@ -40,7 +40,8 @@ export function showForm(box, preview, snippet, { snippets, context, lastValues,
   const values = () => Object.fromEntries([...inputs].map(([name, input]) => [name, input.value]));
   function update() {
     const r = render(snippet.body, { context, values: values(), snippets });
-    preview.textContent = snippet.html ? r.text.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "") : r.text;
+    const files = (snippet.files ?? []).map((f) => `📎 ${render(f.name, { context, values: values() }).text}`).join("\n");
+    preview.textContent = (snippet.html ? r.text.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "") : r.text) + (files ? `\n\n${files}` : "");
   }
   update();
   return { values, focus: () => inputs.values().next().value?.focus(), count: fields.length };

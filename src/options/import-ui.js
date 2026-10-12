@@ -4,6 +4,18 @@ import { getSnippets, getSettings, addSnippets } from "../tb/store.js";
 import { buildExport, readImport } from "../lib/backup.js";
 import { PRESETS } from "../lib/snippets.js";
 import { confirmDialog } from "../kit/dialog.js";
+import { fileData } from "../tb/files.js";
+
+// Snippets with their files' contents, for the export file.
+export async function snippetsWithFiles() {
+  const out = [];
+  for (const s of await getSnippets()) {
+    const files = [];
+    for (const f of s.files ?? []) files.push({ name: f.name, type: f.type, data: await fileData(f.id) });
+    out.push({ ...s, files: files.filter((f) => f.data) });
+  }
+  return out;
+}
 
 const $ = (id) => document.getElementById(id);
 
@@ -42,7 +54,7 @@ export function initImport() {
     }
   });
   $("exportFile").addEventListener("click", async () => {
-    const data = buildExport(await getSnippets(), await getSettings());
+    const data = buildExport(await snippetsWithFiles(), await getSettings());
     download(`thundersnippet-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(data, null, 2));
     say(`Exported ${data.snippets.length} snippets`);
   });

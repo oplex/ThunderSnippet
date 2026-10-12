@@ -9,6 +9,7 @@ import { render } from "../lib/template.js";
 import { composeContext } from "../lib/context.js";
 import { textToHtml } from "../lib/snippets.js";
 import { getSnippets } from "./store.js";
+import { fileBytes } from "./files.js";
 
 const SCRIPT = "src/compose/editor.js";
 
@@ -47,10 +48,22 @@ export function insertPayload(snippet, rendered, plain) {
   return { plain, before: snippet.html ? parts[0] : textToHtml(parts[0]), after: snippet.html ? parts[1] : textToHtml(parts[1]) };
 }
 
-// Fill in `snippet` with `values` for compose tab `tabId` and insert it.
+// Attach the snippet's files, their names filled in like the text.
+async function attachFiles(tabId, snippet, values, context) {
+  for (const f of snippet.files ?? []) {
+    const name = render(f.name, { context, values }).text.trim() || "attachment";
+    await browser.compose.addAttachment(tabId, { file: new File([await fileBytes(f.id)], name, { type: f.type }) });
+  }
+}
+
+// Fill in `snippet` with `values` for compose tab `tabId` and insert it:
+// files first, so {{attachments}} lists them too.
 export async function insertSnippet(tabId, snippet, values = {}) {
   const [details, snippets] = await Promise.all([browser.compose.getComposeDetails(tabId), getSnippets()]);
-  const rendered = render(snippet.body, { context: composeContext(details), values, snippets });
+  const context = composeContext(details);
+  await attachFiles(tabId, snippet, values, context);
+  context.attachments = (await browser.compose.listAttachments(tabId).catch(() => [])).map((a) => a.name);
+  const rendered = render(snippet.body, { context, values, snippets });
   const tab = await browser.tabs.get(tabId);
   await browser.windows.update(tab.windowId, { focused: true }).catch(() => {});
   await browser.tabs.sendMessage(tabId, { type: "ts-insert", ...insertPayload(snippet, rendered, !!details.isPlainText) });
