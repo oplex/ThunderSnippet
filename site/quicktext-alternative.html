@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quicktext alternative for Thunderbird – ThunderSnippet vs Quicktext vs SmartTemplates</title>
+  <meta name="description" content="A fact-checked comparison of Thunderbird template and canned-reply add-ons: ThunderSnippet, Quicktext and SmartTemplates. Thunderbird versions, Experiment APIs, price, license, fields, attachments, import.">
+  <link rel="canonical" href="https://oplex.github.io/thundersnippet/quicktext-alternative.html">
+  <link rel="icon" type="image/png" href="img/icon-64.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Quicktext alternative for Thunderbird – an honest comparison">
+  <meta property="og:description" content="ThunderSnippet vs Quicktext and SmartTemplates, with sources.">
+  <meta property="og:url" content="https://oplex.github.io/thundersnippet/quicktext-alternative.html">
+  <meta property="og:image" content="https://oplex.github.io/thundersnippet/img/2-fill-in.png">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "Can I move my Quicktext templates to ThunderSnippet?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Export them in Quicktext's settings and import the .xml file in ThunderSnippet's settings. Groups, keywords, HTML and the common codes ([[TO=firstname]], [[INPUT=…]], [[CURSOR]], [[TEXT=…]], dates) are translated; anything without an equivalent is kept as text and listed." } },
+      { "@type": "Question", "name": "Which Thunderbird versions does ThunderSnippet support?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Thunderbird 91 to the newest release, in two builds (91–139 and 140+), tested in real Thunderbird builds. It uses only official MailExtension APIs and declares no upper version limit." } }
+    ]
+  }
+  </script>
+</head>
+<body data-app="ThunderSnippet">
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="./"><img src="img/icon-64.png" alt="">ThunderSnippet</a>
+      <nav>
+        <a class="hide-sm" href="./#fields">Fields</a>
+        <a href="#table">Comparison</a>
+        <a href="https://github.com/oplex/thundersnippet">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero wrap">
+      <h1>A Quicktext alternative for Thunderbird</h1>
+      <p class="lead">Quicktext is the long-standing template add-on for Thunderbird, and SmartTemplates fills in replies automatically. Here is how ThunderSnippet compares, with sources, including where the others do more.</p>
+      <div class="buttons">
+        <a class="btn primary" href="https://github.com/oplex/thundersnippet/releases/latest">Try ThunderSnippet – free</a>
+        <a class="btn" href="#table">Jump to the table</a>
+      </div>
+    </div>
+
+    <section id="table" class="soft">
+      <div class="wrap">
+        <h2>Side by side</h2>
+        <p class="intro">Figures from addons.thunderbird.net and each add-on's own files and listing, checked on 12 October 2026. “Not listed” means the listing doesn't mention it. Corrections welcome on <a href="https://github.com/oplex/thundersnippet/issues">GitHub</a>.</p>
+        <div class="table-scroll">
+          <table class="compare">
+            <thead>
+              <tr><th></th><th class="us">ThunderSnippet 1.1</th><th>Quicktext 6.9.4</th><th>SmartTemplates 4.20.2</th></tr>
+            </thead>
+            <tbody>
+              <tr class="group"><th colspan="4">Basics</th></tr>
+              <tr><th>Price</th><td class="us">Free</td><td>Free</td><td>Yearly license (about $5 standard; Pro costs more)</td></tr>
+              <tr><th>License</th><td class="us">MIT (open source)</td><td>MPL 2.0 (open source)</td><td>CC BY-ND 4.0</td></tr>
+              <tr><th>Thunderbird versions (current release)</th><td class="us"><span class="yes">91 → any newer</span><span class="note">two builds: 91–139 and 140+</span></td><td>148 – 157</td><td>140 – 158</td></tr>
+              <tr><th>Experiment APIs (deep access to Thunderbird internals)</th><td class="us"><span class="yes">None</span></td><td>1</td><td>4</td></tr>
+              <tr><th>Download size</th><td class="us">≈ 65 KB</td><td>352 KB</td><td>1.3 MB</td></tr>
+              <tr><th>Daily users (ATN)</th><td class="us">new</td><td>97,000</td><td>3,600</td></tr>
+
+              <tr class="group"><th colspan="4">Writing</th></tr>
+              <tr><th>Type a key, press Tab to expand</th><td class="us"><span class="yes">✓</span> (or Space)</td><td><span class="yes">✓</span> keywords</td><td class="no">not listed</td></tr>
+              <tr><th>Search all snippets from the keyboard</th><td class="us"><span class="yes">✓</span> palette, Alt+Shift+S</td><td>menus and toolbar</td><td class="no">not listed</td></tr>
+              <tr><th>Fields asked when inserting</th><td class="us"><span class="yes">✓</span> form with live preview, defaults, choices, remembered values</td><td><span class="yes">✓</span> [[INPUT]]</td><td class="no">not listed</td></tr>
+              <tr><th>Recipient / sender / date</th><td class="us"><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+              <tr><th>Attachments with a template</th><td class="us"><span class="yes">✓</span> names from fields</td><td><span class="yes">✓</span></td><td class="no">not listed</td></tr>
+              <tr><th>Set the subject</th><td class="us no">–</td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+              <tr><th>Automatic templates for new / reply / forward, per identity</th><td class="us no">–</td><td class="no">–</td><td><span class="yes">✓</span></td></tr>
+              <tr><th>Scripts in templates</th><td class="us no">–</td><td><span class="yes">✓</span> [[SCRIPT]]</td><td class="no">not listed</td></tr>
+
+              <tr class="group"><th colspan="4">Moving in</th></tr>
+              <tr><th>Import</th><td class="us"><span class="yes">✓</span> Quicktext XML, CSV, JSON</td><td>its own XML</td><td>Stationery files</td></tr>
+              <tr><th>Settings backup with other add-ons</th><td class="us"><span class="yes">✓</span> Thunder suite backup</td><td class="no">–</td><td class="no">–</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Which one should you use?</h2>
+        <div class="grid">
+          <div class="card"><h3>ThunderSnippet</h3><p>You type the same emails often and want them one Tab away, with fields, recipient names and files, on any Thunderbird from 91 on.</p></div>
+          <div class="card"><h3>Quicktext</h3><p>You need subject lines or scripts in templates, or you're happy with its menus and toolbar.</p></div>
+          <div class="card"><h3>SmartTemplates</h3><p>You want every new message, reply and forward to start from a template automatically, per identity.</p></div>
+        </div>
+        <p style="margin-top:24px">Moving from Quicktext takes a minute: export your templates in Quicktext's settings, then <em>Import…</em> them in ThunderSnippet's settings. <code>[[TO=firstname]]</code> becomes <code>{{to.first}}</code>, <code>[[INPUT=PO]]</code> becomes <code>{{PO}}</code>, <code>[[CURSOR]]</code> becomes <code>{{cursor}}</code>; codes without an equivalent are kept as text and listed.</p>
+        <p class="small" style="margin-top:18px">Sources: addons.thunderbird.net pages for <a href="https://addons.thunderbird.net/thunderbird/addon/quicktext/">Quicktext</a> and <a href="https://addons.thunderbird.net/thunderbird/addon/smarttemplate4/">SmartTemplates</a> and their public API data; Experiment API counts from each add-on's manifest; SmartTemplates' licensing from its listing.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 <a href="https://oplex.se">oplex.se</a> · MIT License</span>
+      <a href="./">ThunderSnippet home</a>
+      <span>Quicktext and SmartTemplates belong to their authors. Thunderbird is a trademark of the Mozilla Foundation; ThunderSnippet is not affiliated with either.</span>
+    </div>
+  </footer>
+</body>
+</html>

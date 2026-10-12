@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ThunderSnippet – canned replies and email templates for Thunderbird</title>
+  <meta name="description" content="ThunderSnippet: canned replies for Thunderbird. Type po1 and press Tab, fill in {{PONUMBER}}, and the reply is written with the recipient's name, your name and today's date. Free, open source, Quicktext import, Thunderbird 91 to the latest release.">
+  <link rel="canonical" href="https://oplex.github.io/thundersnippet/">
+  <link rel="icon" type="image/png" href="img/icon-64.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ThunderSnippet – canned replies for Thunderbird">
+  <meta property="og:description" content="Type a short key, press Tab, done. Fields, recipient names, dates, attachments. Free and open source.">
+  <meta property="og:url" content="https://oplex.github.io/thundersnippet/">
+  <meta property="og:image" content="https://oplex.github.io/thundersnippet/img/2-fill-in.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <script src="status.js" defer></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ThunderSnippet",
+    "description": "Canned replies and email templates for Thunderbird: abbreviations expanded with Tab, fields, recipient and date variables, attachments, Quicktext import.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Windows, macOS, Linux (Thunderbird 91 or newer)",
+    "url": "https://oplex.github.io/thundersnippet/",
+    "downloadUrl": "https://github.com/oplex/thundersnippet/releases/latest",
+    "license": "https://opensource.org/licenses/MIT",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "oplex.se", "url": "https://oplex.se" }
+  }
+  </script>
+</head>
+<body data-app="ThunderSnippet">
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="./"><img src="img/icon-64.png" alt="">ThunderSnippet</a>
+      <nav>
+        <a class="hide-sm" href="#fields">Fields</a>
+        <a class="hide-sm" href="#tested">Tested</a>
+        <a href="quicktext-alternative.html">vs Quicktext</a>
+        <a href="https://github.com/oplex/thundersnippet">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero wrap">
+      <img class="logo" src="img/icon-128.png" alt="ThunderSnippet logo" width="96" height="96">
+      <h1>Canned replies for Thunderbird,<br class="hide-sm"> one Tab away</h1>
+      <p class="lead">Type <kbd>po1</kbd>, press <kbd>Tab</kbd>, enter the PO number. ThunderSnippet writes the reply with the recipient's first name, your name and today's date, and attaches the files that belong with it.</p>
+      <div class="buttons">
+        <a class="btn primary" href="https://github.com/oplex/thundersnippet/releases/latest">Download – free</a>
+        <a class="btn" href="https://github.com/oplex/thundersnippet">Source on GitHub</a>
+      </div>
+      <p class="small">Free and open source (MIT) · Thunderbird 91 to the latest release · No data collection</p>
+      <div class="shot" style="max-width:640px"><img src="img/2-fill-in.png" alt="Filling in the PO number: the preview shows the finished reply" width="640" height="470"></div>
+    </div>
+
+    <section class="soft">
+      <div class="wrap">
+        <h2>Write the same email once</h2>
+        <p class="intro">Order confirmations, quotes, follow-ups, support answers: type a short key in the message and press Tab, or search all your snippets with <kbd>Alt+Shift+S</kbd>.</p>
+        <div class="grid">
+          <div class="card"><div class="ico">⇥</div><h3>Key + Tab</h3><p>Type <code>ty</code> and press Tab: the key becomes the whole text, right where you are typing. Space works too, if you prefer.</p></div>
+          <div class="card"><div class="ico">✎</div><h3>Fields</h3><p><code>{{PONUMBER}}</code> opens a small form with a live preview. Defaults, choices, and last time's values filled in.</p></div>
+          <div class="card"><div class="ico">👤</div><h3>Knows who you write to</h3><p><code>{{to.first}}</code>, <code>{{me.name}}</code>, <code>{{subject}}</code>, dates in any format, and where the caret ends up.</p></div>
+          <div class="card"><div class="ico">📎</div><h3>Attachments</h3><p>Snippets can bring their files, named from the fields: <code>PO {{PONUMBER}} terms.pdf</code> becomes <em>PO 4711 terms.pdf</em>.</p></div>
+          <div class="card"><div class="ico">🧩</div><h3>Snippets in snippets</h3><p><code>{{snip:sig}}</code> puts your signature snippet in; its fields are asked in the same form.</p></div>
+          <div class="card"><div class="ico">⇄</div><h3>Bring your Quicktext</h3><p>Import Quicktext templates (their codes are translated), CSV, or a ThunderSnippet export.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>See it</h2>
+        <div class="shots">
+          <figure><img src="img/1-palette.png" alt="The snippet palette" width="640" height="470" loading="lazy"><figcaption>The palette: type part of a key, name or text.</figcaption></figure>
+          <figure><img src="img/4-palette-dark.png" alt="The snippet palette in dark mode" width="640" height="470" loading="lazy"><figcaption>Follows Thunderbird's dark mode.</figcaption></figure>
+          <figure><img src="img/3-editor.png" alt="The snippet editor with a file named from a field" width="1100" height="900" loading="lazy"><figcaption>The editor: fields, files and a live preview.</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="fields" class="soft">
+      <div class="wrap">
+        <h2>Everything a snippet can contain</h2>
+        <table class="keys">
+          <tr><td><code>{{PONUMBER}}</code></td><td>A field you fill in (<code>{{PONUMBER|12345}}</code> with a default, <code>{{GREETING|Hi|Hello}}</code> as a choice)</td></tr>
+          <tr><td><code>{{to.first}}</code> <code>{{to.name}}</code> <code>{{to.email}}</code></td><td>The first recipient (<code>{{to.first|there}}</code> when the name is unknown)</td></tr>
+          <tr><td><code>{{me.name}}</code> <code>{{me.email}}</code></td><td>You</td></tr>
+          <tr><td><code>{{subject}}</code></td><td>The subject</td></tr>
+          <tr><td><code>{{date}}</code> <code>{{date:YYYY-MM-DD}}</code> <code>{{time}}</code></td><td>Today, in your format or any pattern</td></tr>
+          <tr><td><code>{{attachments}}</code></td><td>The names of the message's attachments</td></tr>
+          <tr><td><code>{{snip:sig}}</code></td><td>Another snippet</td></tr>
+          <tr><td><code>{{cursor}}</code></td><td>Where the caret goes after inserting</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="tested">
+      <div class="wrap">
+        <h2>Tested on every Thunderbird</h2>
+        <p class="intro">Each change is tested inside real Thunderbird builds: compose windows are opened, keys are typed, forms filled in and the message text checked. Once a week, on every major version since 91.</p>
+        <p>
+          <a href="https://github.com/oplex/thundersnippet/actions/workflows/ci.yml"><img src="https://github.com/oplex/thundersnippet/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI status" height="20" style="display:inline"></a>
+          <a href="https://github.com/oplex/thundersnippet/actions/workflows/compat.yml"><img src="https://github.com/oplex/thundersnippet/actions/workflows/compat.yml/badge.svg" alt="Compatibility status" height="20" style="display:inline"></a>
+        </p>
+        <div id="testStatus"><p class="small">See the latest runs on <a href="https://github.com/oplex/thundersnippet/actions">GitHub Actions</a>.</p></div>
+        <h3 style="margin-top:28px">Versions</h3>
+        <div id="releaseList"><p class="small"><a href="https://github.com/oplex/thundersnippet/releases">All releases</a></p></div>
+      </div>
+    </section>
+
+    <section class="soft">
+      <div class="wrap">
+        <h2>Install</h2>
+        <ol class="steps">
+          <li>Download the <code>.xpi</code> for your Thunderbird from the <a href="https://github.com/oplex/thundersnippet/releases/latest">latest release</a> (one for 140 and newer, one for 91–139).</li>
+          <li>In Thunderbird: <em>Add-ons and Themes → ⚙ → Install Add-on From File…</em> Updates install automatically after that.</li>
+          <li>Write a message, type <code>po1</code> and press <kbd>Tab</kbd>. Example snippets are already there to try and change.</li>
+        </ol>
+        <h3 style="margin-top:28px">The Thunder suite</h3>
+        <p>Same look, made to work together: <a href="https://oplex.github.io/thunderjump/">ThunderJump</a> (jump to any folder from the keyboard) and <a href="https://oplex.github.io/thunderexportimport/">ThunderExportImport</a> (export to PDF, HTML, EML, MBOX with a compliance stamp, which also backs up every suite add-on's settings in one file).</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 <a href="https://oplex.se">oplex.se</a> · MIT License</span>
+      <a href="quicktext-alternative.html">Quicktext alternative</a>
+      <a href="https://github.com/oplex/thundersnippet/issues">Report a problem</a>
+      <span>Thunderbird is a trademark of the Mozilla Foundation; ThunderSnippet is not affiliated with it.</span>
+    </div>
+  </footer>
+</body>
+</html>
