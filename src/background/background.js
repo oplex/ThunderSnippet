@@ -1,7 +1,7 @@
 // ThunderSnippet background: registers the compose script, opens the
 // snippet palette over a compose window, and fills in snippets.
 
-import { registerComposeScript, findComposeTab, insertSnippet, insertText } from "../tb/compose.js";
+import { registerComposeScript, findComposeTab, insertSnippet, insertText, followAttachments } from "../tb/compose.js";
 import { getSnippet, seedPresets, rememberValues, getSnippets, getSettings, saveSettings, saveSnippets } from "../tb/store.js";
 import { fieldsOf } from "../lib/template.js";
 import { serveSuite } from "../kit/suite.js";
@@ -43,6 +43,9 @@ export async function handleCommand(command) {
 }
 
 browser.commands.onCommand.addListener((command) => handleCommand(command));
+followAttachments();
+// The main window's toolbar button opens the snippet list and settings.
+(browser.action ?? browser.browserAction)?.onClicked.addListener(() => browser.runtime.openOptionsPage());
 
 browser.runtime.onMessage.addListener((msg, sender) => {
   if (msg?.type === "ts-expand" && sender.tab) return expand(sender.tab.id, msg.key, msg.typed);

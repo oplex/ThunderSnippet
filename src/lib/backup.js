@@ -2,6 +2,7 @@
 
 import { importQuicktext, importCsv } from "./quicktext.js";
 import { normalizeKey } from "./snippets.js";
+import { cleanHeaders } from "./headers.js";
 
 export const EXPORT_APP = "ThunderSnippet";
 
@@ -10,7 +11,7 @@ export function buildExport(snippets, settings, now = new Date()) {
 }
 
 const cleanFiles = (files) => (Array.isArray(files) ? files.filter((f) => f?.name && typeof f.data === "string").map(({ name, type, data }) => ({ name: String(name), type: String(type ?? ""), data })) : []);
-const clean = (s) => ({ key: normalizeKey(s.key), name: String(s.name ?? s.key), body: String(s.body ?? ""), html: !!s.html, group: String(s.group ?? ""), files: cleanFiles(s.files) });
+const clean = (s) => ({ key: normalizeKey(s.key), name: String(s.name ?? s.key), body: String(s.body ?? ""), html: !!s.html, group: String(s.group ?? ""), files: cleanFiles(s.files), headers: cleanHeaders(s.headers) });
 
 // Any supported file → { kind, snippets, settings?, notes }.
 //   ThunderSnippet export (.json), a JSON array of snippets, Quicktext

@@ -17,9 +17,12 @@ function tag(xml, name) {
 
 const PERSON = { firstname: "first", lastname: "last", fullname: "name", displayname: "name", email: "email" };
 
+const QT_HEADERS = { to: "to", cc: "cc", bcc: "bcc", "reply-to": "replyTo", replyto: "replyTo", subject: "subject" };
+
 // One Quicktext code → our template text. `keyOf(group, name)` finds the key
-// of another imported text for [[TEXT=group|name]].
-function convertCode(code, keyOf, notes) {
+// of another imported text for [[TEXT=group|name]]; [[HEADER=to|…]] goes to
+// `headers` (a snippet header action) and leaves no text.
+function convertCode(code, keyOf, notes, headers = []) {
   const [cmd, ...rest] = code.split("=");
   const arg = rest.join("=");
   const parts = arg.split("|");
@@ -44,6 +47,15 @@ function convertCode(code, keyOf, notes) {
       if (parts[1]?.trim().toLowerCase() === "select") return `{{${[label, ...(parts[2] ?? "").split(";").map((x) => x.trim()).filter(Boolean)].join("|")}}}`;
       return parts[2] ? `{{${label}|${parts[2].trim()}}}` : `{{${label}}}`;
     }
+    case "HEADER": {
+      const field = QT_HEADERS[parts[0].trim().toLowerCase()];
+      if (field) {
+        const value = parts.slice(1).join("|").trim();
+        headers.push(field === "subject" ? { field, mode: "replace", value } : { field, mode: "add", value });
+        return "";
+      }
+      break;
+    }
     case "TEXT": {
       const key = keyOf(parts[0]?.trim(), parts[1]?.trim());
       if (key) return `{{snip:${key}}}`;
@@ -66,7 +78,7 @@ export function importQuicktext(xml) {
       const name = tag(t[2], "name");
       const keyword = tag(t[2], "keyword");
       const type = /type="(\d)"/.exec(t[1])?.[1];
-      raw.push({ group, name, keyword, body: tag(t[2], "body"), html: type === "1", files: tag(t[2], "attachments") });
+      raw.push({ group, name, keyword, body: tag(t[2], "body"), subject: tag(t[2], "subject"), html: type === "1", files: tag(t[2], "attachments") });
     }
   }
   const used = new Set();
@@ -81,13 +93,12 @@ export function importQuicktext(xml) {
   const notes = new Set();
   // Quicktext stores attachments as paths on disk, which add-ons can't read.
   if (raw.some((r) => r.files)) notes.add("attachments (add the files again in the snippet editor)");
-  const snippets = raw.map((r) => ({
-    key: r.key,
-    name: r.name || r.key,
-    group: r.group,
-    html: r.html,
-    body: r.body.replace(/\[\[([^\]]+)\]\]/g, (_, code) => convertCode(code, keyOf, notes)),
-  }));
+  const codes = (text, headers) => text.replace(/\[\[([^\]]+)\]\]/g, (_, code) => convertCode(code, keyOf, notes, headers));
+  const snippets = raw.map((r) => {
+    const headers = [];
+    if (r.subject) headers.push({ field: "subject", mode: "replace", value: codes(r.subject, []) });
+    return { key: r.key, name: r.name || r.key, group: r.group, html: r.html, body: codes(r.body, headers), headers };
+  });
   return { snippets, notes: [...notes] };
 }
 

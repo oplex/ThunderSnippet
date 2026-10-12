@@ -3,6 +3,7 @@
 
 import { normalizeKey, PRESETS } from "../lib/snippets.js";
 import { storeFile, removeFiles, fromBase64 } from "./files.js";
+import { cleanHeaders } from "../lib/headers.js";
 
 export const DEFAULT_SETTINGS = {
   expandKey: "Tab", // "Tab", "Space" or "off": expands an abbreviation typed in a message
@@ -25,7 +26,7 @@ export async function getSnippet(key) {
 // Add or replace (by `oldKey`, or by its own key).
 export async function putSnippet(snippet, oldKey = snippet.key) {
   const list = (await getSnippets()).filter((s) => s.key !== normalizeKey(oldKey) && s.key !== normalizeKey(snippet.key));
-  list.push({ key: normalizeKey(snippet.key), name: snippet.name || snippet.key, body: snippet.body, html: !!snippet.html, group: snippet.group ?? "", files: snippet.files ?? [] });
+  list.push({ key: normalizeKey(snippet.key), name: snippet.name || snippet.key, body: snippet.body, html: !!snippet.html, group: snippet.group ?? "", files: snippet.files ?? [], headers: cleanHeaders(snippet.headers) });
   list.sort((a, b) => a.key.localeCompare(b.key));
   await saveSnippets(list);
 }
@@ -52,7 +53,7 @@ export async function addSnippets(incoming) {
     let key = normalizeKey(s.key);
     for (let i = 2; taken.has(key); i++) key = `${normalizeKey(s.key)}-${i}`;
     taken.add(key);
-    list.push({ key, name: s.name || key, body: s.body, html: !!s.html, group: s.group ?? "", files: await storeImportedFiles(s.files) });
+    list.push({ key, name: s.name || key, body: s.body, html: !!s.html, group: s.group ?? "", files: await storeImportedFiles(s.files), headers: cleanHeaders(s.headers) });
   }
   await saveSnippets(list.sort((a, b) => a.key.localeCompare(b.key)));
   return incoming.length;

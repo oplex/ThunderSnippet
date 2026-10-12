@@ -34,9 +34,13 @@
       <div><ul id="eFiles" class="files"></ul>
         <label class="file tk-button">Add files…<input id="eAddFiles" type="file" multiple></label>
         <span class="dim">Attached when the snippet is inserted. Names may use fields: <code>PO {{PONUMBER}}.pdf</code></span></div>
+      <label>Headers</label>
+      <div><ul id="eHeaders" class="files headers"></ul>
+        <button id="eAddHeader" type="button">Add a header change</button>
+        <span class="dim">Set the subject or add to it, add, replace or remove recipients (To, Cc, Bcc, Reply-To), or set an <code>X-</code> header. Fields work here too: <code>PO {{PONUMBER}}</code></span></div>
     </div>
     <p class="dim help">Fields: <code>{{PONUMBER}}</code>, with a default <code>{{PONUMBER|123}}</code>, choices <code>{{GREETING|Hi|Hello}}</code>.
-      Filled in for you: <code>{{to.first}}</code> <code>{{to.name}}</code> <code>{{to.email}}</code> <code>{{me.name}}</code>
+      Filled in for you: <code>{{attachments}}</code> (kept up to date as files are added) <code>{{to.first}}</code> <code>{{to.name}}</code> <code>{{to.email}}</code> <code>{{me.name}}</code>
       <code>{{subject}}</code> <code>{{date}}</code> <code>{{date:YYYY-MM-DD}}</code> <code>{{time}}</code>,
       another snippet <code>{{snip:sig}}</code>, and the caret <code>{{cursor}}</code>.</p>
     <p><strong>Preview</strong> <span class="dim">(to “Ann Lee”, from you)</span> · <span id="eFields" class="dim"></span></p>

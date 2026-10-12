@@ -1,6 +1,7 @@
 // The fill-in form for a snippet's fields, with a live preview.
 
 import { fieldsOf, render } from "../lib/template.js";
+import { describeHeaders } from "../lib/headers.js";
 
 function el(tag, attrs = {}, text) {
   const node = Object.assign(document.createElement(tag), attrs);
@@ -41,7 +42,9 @@ export function showForm(box, preview, snippet, { snippets, context, lastValues,
   function update() {
     const r = render(snippet.body, { context, values: values(), snippets });
     const files = (snippet.files ?? []).map((f) => `📎 ${render(f.name, { context, values: values() }).text}`).join("\n");
-    preview.textContent = (snippet.html ? r.text.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "") : r.text) + (files ? `\n\n${files}` : "");
+    const changes = describeHeaders(snippet.headers, (v) => render(v, { context, values: values(), snippets }).text).join("\n");
+    const text = snippet.html ? r.text.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "") : r.text;
+    preview.textContent = (changes ? `${changes}\n\n` : "") + text + (files ? `\n\n${files}` : "");
   }
   update();
   return { values, focus: () => inputs.values().next().value?.focus(), count: fields.length };

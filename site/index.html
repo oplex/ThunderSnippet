@@ -66,6 +66,7 @@
           <div class="card"><div class="ico">✎</div><h3>Fields</h3><p><code>{{PONUMBER}}</code> opens a small form with a live preview. Defaults, choices, and last time's values filled in.</p></div>
           <div class="card"><div class="ico">👤</div><h3>Knows who you write to</h3><p><code>{{to.first}}</code>, <code>{{me.name}}</code>, <code>{{subject}}</code>, dates in any format, and where the caret ends up.</p></div>
           <div class="card"><div class="ico">📎</div><h3>Attachments</h3><p>Snippets can bring their files, named from the fields: <code>PO {{PONUMBER}} terms.pdf</code> becomes <em>PO 4711 terms.pdf</em>.</p></div>
+          <div class="card"><div class="ico">✉️</div><h3>Subject and recipients</h3><p>A snippet can put <code>[PO {{PONUMBER}}]</code> before the subject, add your manager on Cc, replace To, set Reply-To or an <code>X-</code> header.</p></div>
           <div class="card"><div class="ico">🧩</div><h3>Snippets in snippets</h3><p><code>{{snip:sig}}</code> puts your signature snippet in; its fields are asked in the same form.</p></div>
           <div class="card"><div class="ico">⇄</div><h3>Bring your Quicktext</h3><p>Import Quicktext templates (their codes are translated), CSV, or a ThunderSnippet export.</p></div>
         </div>
@@ -92,7 +93,7 @@
           <tr><td><code>{{me.name}}</code> <code>{{me.email}}</code></td><td>You</td></tr>
           <tr><td><code>{{subject}}</code></td><td>The subject</td></tr>
           <tr><td><code>{{date}}</code> <code>{{date:YYYY-MM-DD}}</code> <code>{{time}}</code></td><td>Today, in your format or any pattern</td></tr>
-          <tr><td><code>{{attachments}}</code></td><td>The names of the message's attachments</td></tr>
+          <tr><td><code>{{attachments}}</code></td><td>The names of the message's attachments, kept up to date when you add or remove files later</td></tr>
           <tr><td><code>{{snip:sig}}</code></td><td>Another snippet</td></tr>
           <tr><td><code>{{cursor}}</code></td><td>Where the caret goes after inserting</td></tr>
         </table>

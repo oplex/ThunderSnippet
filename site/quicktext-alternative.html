@@ -72,7 +72,9 @@
               <tr><th>Fields asked when inserting</th><td class="us"><span class="yes">✓</span> form with live preview, defaults, choices, remembered values</td><td><span class="yes">✓</span> [[INPUT]]</td><td class="no">not listed</td></tr>
               <tr><th>Recipient / sender / date</th><td class="us"><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
               <tr><th>Attachments with a template</th><td class="us"><span class="yes">✓</span> names from fields</td><td><span class="yes">✓</span></td><td class="no">not listed</td></tr>
-              <tr><th>Set the subject</th><td class="us no">–</td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+              <tr><th>Set the subject</th><td class="us"><span class="yes">✓</span> set, or add before / after</td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+              <tr><th>Add or replace recipients (To, Cc, Bcc, Reply-To)</th><td class="us"><span class="yes">✓</span> add, replace or remove</td><td><span class="yes">✓</span> [[HEADER]]</td><td><span class="yes">✓</span></td></tr>
+              <tr><th>Custom headers</th><td class="us"><span class="yes">✓</span> X- headers</td><td class="no">not listed</td><td class="no">not listed</td></tr>
               <tr><th>Automatic templates for new / reply / forward, per identity</th><td class="us no">–</td><td class="no">–</td><td><span class="yes">✓</span></td></tr>
               <tr><th>Scripts in templates</th><td class="us no">–</td><td><span class="yes">✓</span> [[SCRIPT]]</td><td class="no">not listed</td></tr>
 
@@ -90,10 +92,10 @@
         <h2>Which one should you use?</h2>
         <div class="grid">
           <div class="card"><h3>ThunderSnippet</h3><p>You type the same emails often and want them one Tab away, with fields, recipient names and files, on any Thunderbird from 91 on.</p></div>
-          <div class="card"><h3>Quicktext</h3><p>You need subject lines or scripts in templates, or you're happy with its menus and toolbar.</p></div>
+          <div class="card"><h3>Quicktext</h3><p>You need scripts in templates, or you're happy with its menus and toolbar.</p></div>
           <div class="card"><h3>SmartTemplates</h3><p>You want every new message, reply and forward to start from a template automatically, per identity.</p></div>
         </div>
-        <p style="margin-top:24px">Moving from Quicktext takes a minute: export your templates in Quicktext's settings, then <em>Import…</em> them in ThunderSnippet's settings. <code>[[TO=firstname]]</code> becomes <code>{{to.first}}</code>, <code>[[INPUT=PO]]</code> becomes <code>{{PO}}</code>, <code>[[CURSOR]]</code> becomes <code>{{cursor}}</code>; codes without an equivalent are kept as text and listed.</p>
+        <p style="margin-top:24px">Moving from Quicktext takes a minute: export your templates in Quicktext's settings, then <em>Import…</em> them in ThunderSnippet's settings. <code>[[TO=firstname]]</code> becomes <code>{{to.first}}</code>, <code>[[INPUT=PO]]</code> becomes <code>{{PO}}</code>, <code>[[CURSOR]]</code> becomes <code>{{cursor}}</code>, a template's subject and <code>[[HEADER=cc|…]]</code> become header changes; codes without an equivalent are kept as text and listed.</p>
         <p class="small" style="margin-top:18px">Sources: addons.thunderbird.net pages for <a href="https://addons.thunderbird.net/thunderbird/addon/quicktext/">Quicktext</a> and <a href="https://addons.thunderbird.net/thunderbird/addon/smarttemplate4/">SmartTemplates</a> and their public API data; Experiment API counts from each add-on's manifest; SmartTemplates' licensing from its listing.</p>
       </div>
     </section>

@@ -39,7 +39,7 @@ const PREFS = {
   "layout.spellcheckDefault": 0,
 };
 
-const TEST_FILES = ["selftest.js", "util.js", "tests-compose.js", "tests-palette.js"];
+const TEST_FILES = ["selftest.js", "util.js", "tests-compose.js", "tests-palette.js", "tests-headers.js"];
 
 // Copy the add-on (or another Thunder add-on at `root`) into `stage`, add the
 // self-test when `withTests`, and zip it to `xpi`. Returns the add-on id.

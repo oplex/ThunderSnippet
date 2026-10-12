@@ -42,8 +42,8 @@ the palette), in the settings.
 
 ## Writing snippets
 
-Open the settings (⚙ in the palette, or Add-ons Manager → ThunderSnippet →
-Options). Each snippet has a **key** (what you type, e.g. `po1`), a name and
+Open the settings (the ThunderSnippet button on the main toolbar, ⚙ in the
+palette, or Add-ons Manager → ThunderSnippet → Options). Each snippet has a **key** (what you type, e.g. `po1`), a name and
 the text. A live preview shows the result.
 
 | In the text | Becomes |
@@ -57,7 +57,7 @@ the text. A live preview shows the result.
 | `{{subject}}` | The message subject |
 | `{{date}}` `{{time}}` | Today, in your format |
 | `{{date:YYYY-MM-DD}}` `{{date:dddd D MMMM}}` | A date format (`YYYY YY MMMM MMM MM M DD D dddd ddd HH H mm ss`) |
-| `{{attachments}}` `{{attachments.count}}` | The names (and number) of the message's attachments |
+| `{{attachments}}` `{{attachments.count}}` | The names (and number) of the message's attachments, updated when files are added or removed later (HTML messages) |
 | `{{snip:sig}}` | Another snippet, by key (its fields are asked too) |
 | `{{cursor}}` | Where the caret goes afterwards |
 
@@ -71,6 +71,21 @@ attaches them to the message. File names can use fields too: a file named
 `PO {{PONUMBER}} terms.pdf` is attached as `PO 4711 terms.pdf`, and the form
 asks for the PO number once for the text and the name. The text can mention
 them with `{{attachments}}`. Files travel with exports and the suite backup.
+
+### Subject, recipients and headers
+
+*Headers → Add a header change* in the editor. When the snippet is inserted:
+
+| Change | Ways |
+| --- | --- |
+| Subject | set to, add before, add after (not twice: `[PO 4711]` is added once) |
+| To, Cc, Bcc, Reply-To | add (skips addresses already there), replace with, remove |
+| `X-` header (e.g. `X-Order`) | set to (Thunderbird 102+) |
+
+Values can use fields and built-ins: subject `[PO {{PONUMBER}}]`, Cc
+`{{to.email}}`, several addresses separated by commas. A snippet may consist
+of header changes only (e.g. key `ccboss`: add your manager on Cc). Quicktext
+imports turn a template's subject and `[[HEADER=cc|…]]` into header changes.
 
 Example snippets are added on first install, `po1` among them:
 
@@ -114,7 +129,8 @@ backed up in one file.
 ## Permissions
 
 - `compose`: read the recipient and subject of the message you're writing,
-  and insert the snippet where the caret is
+  insert the snippet where the caret is, and make the snippet's header
+  changes (subject, recipients)
 - `storage`: keep your snippets and settings
 - `scripting` (Thunderbird 140+): how the compose part is loaded there
 

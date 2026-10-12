@@ -48,9 +48,9 @@ test("CSV import with quotes and line breaks", () => {
 test("readImport recognises every format; export round-trips", () => {
   assert.equal(readImport(QT).kind, "Quicktext");
   assert.equal(readImport("key,text\nx,y", "a.csv").kind, "CSV");
-  const exported = JSON.stringify(buildExport([{ key: "Po1", name: "P", body: "b" }], { expandKey: "Tab" }));
+  const exported = JSON.stringify(buildExport([{ key: "Po1", name: "P", body: "b", headers: [{ field: "cc", mode: "add", value: "a@x.se" }] }], { expandKey: "Tab" }));
   const back = readImport(exported);
   assert.equal(back.kind, "ThunderSnippet");
-  assert.deepEqual(back.snippets, [{ key: "po1", name: "P", body: "b", html: false, group: "", files: [] }]);
+  assert.deepEqual(back.snippets, [{ key: "po1", name: "P", body: "b", html: false, group: "", files: [], headers: [{ field: "cc", mode: "add", value: "a@x.se" }] }]);
   assert.throws(() => readImport("hello"), /Unknown file/);
 });

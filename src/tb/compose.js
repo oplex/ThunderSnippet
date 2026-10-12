@@ -5,7 +5,8 @@
  *   Thunderbird 91–139 (Manifest V2): composeScripts.register
  */
 
-import { render } from "../lib/template.js";
+import { render, markAttachments } from "../lib/template.js";
+import { headerPatch } from "../lib/headers.js";
 import { composeContext } from "../lib/context.js";
 import { textToHtml } from "../lib/snippets.js";
 import { getSnippets } from "./store.js";
@@ -39,13 +40,31 @@ export async function contextFor(tabId) {
 const stripHtml = (html) => html.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
 
 // What the compose script inserts: { plain, before, after } (HTML unless
-// plain), with the caret placed between before and after.
+// plain), with the caret placed between before and after. Attachment names
+// rendered with `mark` become spans the compose script keeps up to date
+// (HTML messages; plain text messages get the names as they are now).
 export function insertPayload(snippet, rendered, plain) {
   const { text, cursor } = rendered;
   const at = cursor ?? text.length;
   const parts = [text.slice(0, at), text.slice(at)];
-  if (plain) return { plain, before: snippet.html ? stripHtml(parts[0]) : parts[0], after: snippet.html ? stripHtml(parts[1]) : parts[1] };
-  return { plain, before: snippet.html ? parts[0] : textToHtml(parts[0]), after: snippet.html ? parts[1] : textToHtml(parts[1]) };
+  const html = (t) => markAttachments(snippet.html ? t : textToHtml(t));
+  const flat = (t) => markAttachments(snippet.html ? stripHtml(t) : t, true);
+  const [before, after] = parts.map(plain ? flat : html);
+  return { plain, before, after };
+}
+
+const names = async (tabId) => (await browser.compose.listAttachments(tabId).catch(() => [])).map((a) => a.name);
+
+// Keep inserted {{attachments}} up to date when files are added or removed
+// (e.g. dragged into the window after the snippet was inserted).
+export function followAttachments() {
+  const update = async (tab) => {
+    const id = tab?.id ?? tab;
+    const list = await names(id);
+    await browser.tabs.sendMessage(id, { type: "ts-attachments", names: list }).catch(() => {});
+  };
+  browser.compose.onAttachmentAdded?.addListener((tab) => update(tab));
+  browser.compose.onAttachmentRemoved?.addListener((tab) => update(tab));
 }
 
 // Attach the snippet's files, their names filled in like the text.
@@ -56,18 +75,31 @@ async function attachFiles(tabId, snippet, values, context) {
   }
 }
 
+// Custom headers need Thunderbird 100+; older versions get the rest.
+async function setDetails(tabId, patch) {
+  try {
+    await browser.compose.setComposeDetails(tabId, patch);
+  } catch (e) {
+    if (!patch.customHeaders) throw e;
+    const { customHeaders, ...rest } = patch;
+    if (Object.keys(rest).length) await browser.compose.setComposeDetails(tabId, rest);
+  }
+}
+
 // Fill in `snippet` with `values` for compose tab `tabId` and insert it:
-// files first, so {{attachments}} lists them too.
+// header changes and files first, so {{attachments}} lists them too.
 export async function insertSnippet(tabId, snippet, values = {}) {
   const [details, snippets] = await Promise.all([browser.compose.getComposeDetails(tabId), getSnippets()]);
   const context = composeContext(details);
+  const patch = headerPatch(details, snippet.headers, (v) => render(v, { context, values, snippets }).text);
+  if (Object.keys(patch).length) await setDetails(tabId, patch);
   await attachFiles(tabId, snippet, values, context);
-  context.attachments = (await browser.compose.listAttachments(tabId).catch(() => [])).map((a) => a.name);
-  const rendered = render(snippet.body, { context, values, snippets });
+  context.attachments = await names(tabId);
+  const rendered = render(snippet.body, { context, values, snippets, mark: true });
   const tab = await browser.tabs.get(tabId);
   await browser.windows.update(tab.windowId, { focused: true }).catch(() => {});
   await browser.tabs.sendMessage(tabId, { type: "ts-insert", ...insertPayload(snippet, rendered, !!details.isPlainText) });
-  return rendered.text;
+  return markAttachments(rendered.text, true);
 }
 
 // Put typed text back (an inline expansion that was cancelled).

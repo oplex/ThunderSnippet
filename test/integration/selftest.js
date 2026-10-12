@@ -5,6 +5,7 @@ import { REPORT_URL } from "./config.js";
 import { results, post, log, waitFor } from "./util.js";
 import { composeTests } from "./tests-compose.js";
 import { paletteTests } from "./tests-palette.js";
+import { headerTests } from "./tests-headers.js";
 import { ready } from "../../src/background/background.js";
 
 async function runnerReady() {
@@ -23,6 +24,7 @@ async function run() {
   await ready;
   await composeTests();
   await paletteTests();
+  await headerTests();
   await post({ type: "result", version: info.version, tests: results });
 }
 

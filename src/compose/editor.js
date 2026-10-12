@@ -4,6 +4,7 @@
  *    Space, see settings): the key is replaced by the snippet. Snippets with
  *    fields open the ThunderSnippet form first (background.js).
  *  - Inserts text sent by the add-on at the caret ({ type: "ts-insert" }).
+ *  - Keeps inserted attachment names current ({ type: "ts-attachments" }).
  * A classic script (no modules), as compose scripts must be.
  */
 (() => {
@@ -77,6 +78,14 @@
   browser.runtime.onMessage.addListener((msg) => {
     if (msg?.type === "ts-insert") {
       insert(msg);
+      return Promise.resolve(true);
+    }
+    // Attachments changed: refresh the {{attachments}} text inserted earlier.
+    if (msg?.type === "ts-attachments") {
+      for (const span of document.querySelectorAll("span[data-ts-att]")) {
+        const names = msg.names ?? [];
+        span.textContent = span.dataset.tsAtt === "attachments.count" ? String(names.length) : names.join(", ") || span.dataset.fallback || "";
+      }
       return Promise.resolve(true);
     }
     if (msg?.type === "ts-ping") return Promise.resolve(true);

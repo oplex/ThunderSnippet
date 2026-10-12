@@ -36,11 +36,12 @@ const byKey = (snippets, key) => snippets.find((s) => s.key.toLowerCase() === ke
 
 // The fields a snippet asks for (nested snippets included), in order:
 // [{ name, default, choices }]. Pass a snippet object to include the fields
-// in its file names too.
+// in its file names and header actions too.
 export function fieldsOf(body, snippets = [], depth = 0, seen = new Map()) {
   if (body && typeof body === "object") {
     fieldsOf(body.body, snippets, depth, seen);
     for (const f of body.files ?? []) fieldsOf(f.name, snippets, depth, seen);
+    for (const h of body.headers ?? []) fieldsOf(h.value, snippets, depth, seen);
     return [...seen.values()];
   }
   for (const m of String(body).matchAll(TOKEN)) {
@@ -66,10 +67,28 @@ function builtin(name, context, now) {
   return kind.toLowerCase() === "date" ? localDate(now) : localTime(now);
 }
 
+// With `mark`, {{attachments}} and {{attachments.count}} come out wrapped as
+// MARK_START kind MARK_SEP fallback MARK_SEP value MARK_END, so the inserted
+// text can follow attachments added later (see markAttachments).
+export const MARK_START = "\uE000";
+export const MARK_SEP = "\uE001";
+export const MARK_END = "\uE002";
+const MARKED = /\uE000([^\uE001]*)\uE001([^\uE001]*)\uE001([^\uE002]*)\uE002/g;
+
+// Turn the marks into <span data-ts-att="kind" data-fallback="…">value</span>
+// (after the text was made HTML), or drop them (`plain`).
+export function markAttachments(text, plain = false) {
+  return text.replace(MARKED, (_, kind, fallback, value) =>
+    plain ? value : `<span data-ts-att="${kind}" data-fallback="${attr(fallback)}">${value}</span>`,
+  );
+}
+const attr = (s) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+
+
 // Fill in a snippet. Returns { text, cursor } where cursor is the index of
 // the first {{cursor}} in text (or null). Unknown snippets in {{snip:…}}
 // are left as they are, so mistakes are visible.
-export function render(body, { context = {}, values = {}, snippets = [], now = new Date() } = {}, depth = 0) {
+export function render(body, { context = {}, values = {}, snippets = [], now = new Date(), mark = false } = {}, depth = 0) {
   let text = "";
   let cursor = null;
   let last = 0;
@@ -84,12 +103,14 @@ export function render(body, { context = {}, values = {}, snippets = [], now = n
       const inner = depth < MAX_DEPTH ? byKey(snippets, t.name) : null;
       if (!inner) text += m[0];
       else {
-        const r = render(inner.body, { context, values, snippets, now }, depth + 1);
+        const r = render(inner.body, { context, values, snippets, now, mark }, depth + 1);
         if (cursor == null && r.cursor != null) cursor = text.length + r.cursor;
         text += r.text;
       }
     } else if (t.kind === "builtin") {
-      text += builtin(t.name, context, now) || (t.options[0] ?? "");
+      const value = builtin(t.name, context, now) || (t.options[0] ?? "");
+      const kind = t.name.toLowerCase();
+      text += mark && kind.startsWith("attachments") ? MARK_START + kind + MARK_SEP + (t.options[0] ?? "") + MARK_SEP + value + MARK_END : value;
     } else {
       text += values[t.name] ?? t.options[0] ?? "";
     }

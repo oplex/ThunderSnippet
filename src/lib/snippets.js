@@ -1,10 +1,12 @@
 /*
- * Snippets (pure): { key, name, body, html, group }.
+ * Snippets (pure): { key, name, body, html, group, files, headers }.
  *   key    what you type before Tab, e.g. "po1" (letters, digits, - _ .)
  *   html   body is HTML (otherwise plain text; line breaks are kept)
+ *   headers  changes to subject / recipients / X- headers (headers.js)
  */
 
 import { fold, matchTerm, splitTerms } from "../kit/fuzzy.js";
+import { checkHeaders } from "./headers.js";
 
 export const KEY_PATTERN = /^[\p{L}\p{N}_.-]{1,40}$/u;
 
@@ -16,7 +18,10 @@ export function normalizeKey(key) {
 export function checkSnippet(s, others = []) {
   const key = normalizeKey(s.key);
   if (!KEY_PATTERN.test(key)) return "The key may only have letters, digits, - _ and . (no spaces), e.g. po1";
-  if (!String(s.body ?? "").trim()) return "The text is empty";
+  // A snippet may only change headers (e.g. "add my boss on Cc").
+  if (!String(s.body ?? "").trim() && !s.headers?.length) return "The text is empty";
+  const headerError = checkHeaders(s.headers);
+  if (headerError) return headerError;
   if (others.some((o) => normalizeKey(o.key) === key)) return `Another snippet already uses “${key}”`;
   return "";
 }
