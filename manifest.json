@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "ThunderSnippet",
+  "version": "1.0.0",
+  "description": "Canned replies for Thunderbird: type a key like po1 and press Tab, or search your snippets. Fields like {{PONUMBER}}, recipient names, dates, presets and Quicktext import.",
+  "author": "oplex.se",
+  "homepage_url": "https://github.com/oplex/thundersnippet",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "thundersnippet@oplex",
+      "strict_min_version": "140.0",
+      "update_url": "https://github.com/oplex/thundersnippet/releases/latest/download/updates.json"
+    }
+  },
+  "icons": {
+    "16": "icons/thundersnippet-16.png",
+    "32": "icons/thundersnippet-32.png",
+    "48": "icons/thundersnippet-48.png",
+    "64": "icons/thundersnippet-64.png",
+    "96": "icons/thundersnippet-96.png",
+    "128": "icons/thundersnippet-128.png"
+  },
+  "permissions": [
+    "compose",
+    "scripting",
+    "storage"
+  ],
+  "background": {
+    "scripts": [
+      "src/background/background.js"
+    ],
+    "type": "module"
+  },
+  "compose_action": {
+    "default_title": "Snippets",
+    "default_icon": "icons/thundersnippet.svg",
+    "default_popup": "src/palette/palette.html"
+  },
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "open-snippets": {
+      "suggested_key": {
+        "default": "Alt+Shift+S"
+      },
+      "description": "Open the snippet palette"
+    }
+  }
+}

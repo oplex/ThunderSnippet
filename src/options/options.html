@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ThunderSnippet</title>
+  <link rel="stylesheet" href="../kit/theme.css">
+  <link rel="stylesheet" href="options.css">
+  <script type="module" src="options.js"></script>
+</head>
+<body class="tk-page">
+  <div class="tk-brand"><img src="../../icons/thundersnippet-48.png" width="40" height="40" alt=""><h1>ThunderSnippet</h1></div>
+  <p class="dim">In a message, type a snippet's key (like <code>po1</code>) and press <kbd>Tab</kbd>,
+    or press <kbd id="paletteKey">Alt+Shift+S</kbd> to search your snippets.</p>
+  <p id="suite" class="dim"></p>
+
+  <h2>Snippets</h2>
+  <p><input id="filter" type="text" placeholder="Filter…" style="width:16em">
+    <button id="newSnippet" class="primary">New snippet</button>
+    <button id="addPresets">Add example snippets</button></p>
+  <table>
+    <thead><tr><th>Key</th><th>Name</th><th>Text</th><th></th></tr></thead>
+    <tbody id="snippets"></tbody>
+  </table>
+
+  <section id="editor" class="editor" hidden>
+    <h2 id="editorTitle">New snippet</h2>
+    <div class="grid">
+      <label for="eKey">Key</label><input id="eKey" type="text" placeholder="po1">
+      <label for="eName">Name</label><input id="eName" type="text" placeholder="Purchase order">
+      <label for="eGroup">Group</label><input id="eGroup" type="text" placeholder="optional">
+      <label for="eBody">Text</label><textarea id="eBody" rows="9"></textarea>
+      <span></span><label class="inline"><input id="eHtml" type="checkbox"> The text is HTML</label>
+    </div>
+    <p class="dim help">Fields: <code>{{PONUMBER}}</code>, with a default <code>{{PONUMBER|123}}</code>, choices <code>{{GREETING|Hi|Hello}}</code>.
+      Filled in for you: <code>{{to.first}}</code> <code>{{to.name}}</code> <code>{{to.email}}</code> <code>{{me.name}}</code>
+      <code>{{subject}}</code> <code>{{date}}</code> <code>{{date:YYYY-MM-DD}}</code> <code>{{time}}</code>,
+      another snippet <code>{{snip:sig}}</code>, and the caret <code>{{cursor}}</code>.</p>
+    <p><strong>Preview</strong> <span class="dim">(to “Ann Lee”, from you)</span> · <span id="eFields" class="dim"></span></p>
+    <div id="ePreview" class="tk-preview"></div>
+    <p><button id="eSave" class="primary">Save</button><button id="eCancel">Cancel</button><span id="eStatus"></span></p>
+  </section>
+
+  <h2>Import and export</h2>
+  <p class="dim">Import a ThunderSnippet export, Quicktext templates (<code>.xml</code>, from Quicktext's
+    settings → Export) or a CSV with <code>key,name,text</code> columns. Keys already in use get a number added.</p>
+  <p><label class="file tk-button">Import…<input id="importFile" type="file" accept=".json,.xml,.csv,application/json,text/xml,text/csv"></label>
+    <button id="exportFile">Export all snippets</button></p>
+  <p id="importStatus"></p>
+
+  <h2>Settings</h2>
+  <label>Expand a key typed in a message when I press
+    <select id="expandKey" style="width:auto"><option value="Tab">Tab</option><option value="Space">Space</option><option value="off">(never: only the palette)</option></select></label>
+  <label><input type="checkbox" id="rememberValues"> Fill fields with what I typed last time</label>
+  <label><input type="checkbox" id="closeOnBlur"> Close the snippet window when it loses focus</label>
+
+  <h2>Keyboard shortcuts</h2>
+  <table>
+    <thead><tr><th>Action</th><th>Keys</th><th></th><th></th></tr></thead>
+    <tbody id="keyboard"></tbody>
+  </table>
+</body>
+</html>

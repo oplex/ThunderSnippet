@@ -1,0 +1,10 @@
+.editor { border: 1px solid var(--line); border-radius: var(--radius); padding: 0 14px 10px; margin-top: 12px; }
+.editor h2 { border-top: 0; }
+.editor .grid { display: grid; grid-template-columns: max-content 1fr; gap: 6px 12px; align-items: start; }
+.editor .grid > label { padding-top: 6px; }
+.editor textarea { font: 13px ui-monospace, Menlo, Consolas, monospace; resize: vertical; }
+.editor .tk-preview { margin: 0 0 10px; max-height: 220px; }
+.help code { white-space: nowrap; }
+td.key { font-family: ui-monospace, Menlo, Consolas, monospace; white-space: nowrap; }
+td.text { color: var(--dim); max-width: 22em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+td.actions { white-space: nowrap; }

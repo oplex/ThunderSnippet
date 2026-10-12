@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ThunderSnippet</title>
+  <link rel="stylesheet" href="../kit/theme.css">
+  <script type="module" src="palette.js"></script>
+</head>
+<body>
+  <div class="tk-palette">
+    <div class="tk-bar">
+      <span id="mode" class="tk-mode" hidden></span>
+      <input id="input" type="text" autocomplete="off" spellcheck="false" placeholder="Insert snippet…   type a key or name">
+      <button id="openOptions" class="tk-tool" title="Snippets and settings">⚙</button>
+    </div>
+    <div id="banner" class="tk-banner" hidden></div>
+    <ul id="list" class="tk-list" role="listbox"></ul>
+    <div id="form" class="tk-form" hidden></div>
+    <div id="preview" class="tk-preview" hidden></div>
+    <div class="tk-footer">
+      <span id="status"></span>
+      <span id="hints" class="hints">↵ insert · ↑↓ choose · Esc close · ⚙ edit snippets</span>
+    </div>
+  </div>
+</body>
+</html>
